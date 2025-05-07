@@ -62,7 +62,7 @@ My suggestion for Double Entry Accounting with my script:
 1. Open the PDF and the generated Excel side-by-side
 2. Review page-by-page (e.g., January 2024, then February 2024,etc). 
 3. Use a physical notepad with a pen to o to mark each confirmed section you have double checked.
-4. Once you are done, repeat steps 1-3 AGAIN! Do not be lazy. The program does most of the work for you but it still needs human intervention. 
+4. Once you are done, repeat steps 1-3 AGAIN! Do not be lazy. The program will most likely do all of the work for you (I have never seen a mistake yet in my testing), but it still requires human intervention and eyes to be safe!
 
 Happy converting! 🚀
 
