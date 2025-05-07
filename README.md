@@ -10,7 +10,7 @@ So, without any paid viable solutions, I decided to create my own Python script 
 
 The script harnesses the power of pdfplumber, pandas and openpyxl — Specialized python libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; 
 
-Universal Compatibility: Need to process statements from a different bank? The framework adapts effortlessly across financial institutions. Simply share sample statement screenshots of your Bank PDF Statements (or similar) with your preferred AI tool (or engage my AI consulting services). I've successfully adapted this tool for multiple major banks—transforming what would normally be days of custom development into a 30-minute configuration process - https://www.linkedin.com/in/ellis-jesse/
+Universal Compatibility: Need to process statements from a different bank? The framework adapts effortlessly across financial institutions. Simply share the python file in this repo along with a sample PDF statement (or screenshot) to a compatabile Ai, and it should be able to tweak the script for you easily. I am also available for consulting - https://www.linkedin.com/in/ellis-jesse/
 
 So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
 
