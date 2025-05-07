@@ -116,8 +116,6 @@ While most developers visiting this repository can simply download and run the p
      python3 pdf-2-excel.py
      ```
 
-```markdown
-
 ### Linux Setup
 
 #### Option 1: Quick Setup (Easiest but Option 2 is recommended below as it is safer) 
@@ -188,3 +186,4 @@ This method is safer but requires a few more commands:
    ```
 ```
 
+```markdown
