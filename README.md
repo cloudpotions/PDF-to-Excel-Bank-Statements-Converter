@@ -32,7 +32,7 @@ So if you're like me, trapped in the PDF banking purgatory with years of stateme
 
 ## How It Works
 
-This script is a **GUI-based tool** (Graphical User Interface), so you don’t need to be a programmer to use it. Here’s what it does:
+This script is a **GUI based tool**, so you don’t need to be a programmer to use it. Here’s what it does:
 
 1. **Select PDF Folder**: A pop-up window will ask you to select a folder with all the PDF documents you wish to process. It will process ALL PDF in that folder, so make sure you do not run it in Downloads folder - Save your PDF files to a new Folder (For example, Chase Bank Statements 2024 Folder)
 
