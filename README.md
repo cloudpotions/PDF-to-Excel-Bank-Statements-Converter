@@ -6,7 +6,10 @@ This project was born out of necessity. I was doing my taxes and, to my surprise
 
 So, I decided to create my own Python script. To my amazement, it worked **flawlessly** and did what Big Tech has failed to do. 
 
-![PDF to Excel Bank Statement Converter](https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter/raw/main/PDF2Excel.jpg)
+<p align="center">
+  <img src="https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter/raw/main/PDF2Excel.jpg" alt="PDF to Excel Bank Statement Converter">
+</p>
+
 
 
 This Python script is a lightning-fast, precision-engineered GUI tool that transforms cluttered bank PDF statements into beautifully organized Excel spreadsheets. Unlike Adobe Acrobat Pro—which crawls along using error-prone OCR technology that mangles your financial data. These enterprise solutions choked on simple bank PDFs, taking 15+ minutes to process what this script handles in seconds. While Fortune 500 companies were busy building AI assistants and subscription models, they somehow missed building a tool that actually works for this essential financial task.
