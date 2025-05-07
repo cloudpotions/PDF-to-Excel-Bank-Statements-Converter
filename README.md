@@ -1,6 +1,6 @@
 PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows) 
 
-Please give me a Star on Github if you used this script! ⭐ Support This Project
+⭐ Please give me a Star on Github if you used this script! ⭐ 
 
 This project was born out of necessity. I was doing my taxes and, to my surprise Adobe Acrobat Pro, Nitro PDF and other paid solutions could not properly convert my Bank PDF Statements into excel files properly 
 
