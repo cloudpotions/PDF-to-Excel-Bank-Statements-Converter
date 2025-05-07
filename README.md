@@ -42,8 +42,11 @@ This script is a **GUI-based tool** (Graphical User Interface), so you don’t n
 
 ---
 
-Special Note: You must have Python installed on your OS along with the libraries pdfplumber, pandas, and openpyxl. To use the script, download PDF-2-Excel.py from this repository and run the file and the Gui will do the rest! If double clicking does not open the file, go to your terminal and make sure you are in the same location as the script and run the script with the following command:
+Special Note: You must have Python installed on your OS along with the libraries pdfplumber, pandas, and openpyxl. To use the script, download PDF-2-Excel.py from this repository and run the script and the Gui will do the rest!
 
+For Newbies: If double clicking on the file does not open the file, go to your terminal and make sure you are in the same location as the script and run the script with the following command, for example if it is in your downloads folder, enter this in the terminal: 
+
+cd Downloads
 python3 PDF-2-Excel.py
 
 Even though the script maintains exact PDF order, manual review is essential! 
