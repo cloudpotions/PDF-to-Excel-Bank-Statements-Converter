@@ -10,11 +10,7 @@ So, I decided to create my own Python script. To my amazement, it worked **flawl
   <img src="https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter/raw/main/PDF2Excel.jpg" alt="PDF to Excel Bank Statement Converter">
 </p>
 
-
-
-This Python script is a lightning-fast, precision-engineered GUI tool that transforms cluttered bank PDF statements into beautifully organized Excel spreadsheets. Unlike Adobe Acrobat Pro—which crawls along using error-prone OCR technology that mangles your financial data. These enterprise solutions choked on simple bank PDFs, taking 15+ minutes to process what this script handles in seconds. While Fortune 500 companies were busy building AI assistants and subscription models, they somehow missed building a tool that actually works for this essential financial task.
-
-The script harnesses the power of pdfplumber and pandas—specialized libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; simply share your bank's PDF format with Claude 3.7 Sonnet or another AI assistant, and be sure to tell your Ai what columns and format your Bank PDF has and it will be able to easily modify the python script for you (I tested on a couple other Bank PDF Statements using Claude 3.7 Sonnet and it was able to modify on the first try). 
+The script harnesses the power of pdfplumber and pandas—specialized libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; If you wish to modify the script for other Bank Statement Layouts, simply share your bank's PDF format with your preffered Ai model (I used Claude Sonnet), along with the python file in this repo; be sure to tell your Ai what columns and format your Bank PDF has and ask it to rewrite the python script for you. I tested this with a couple of other Banks and it worked on the first try everytime with Claude Sonnet 3.7. 
 
 So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
 
