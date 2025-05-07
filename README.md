@@ -1,6 +1,6 @@
 PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows)  
 
-TBanks have mastered a special kind of digital irony: they'll happily store and provide your statements from 7+ years ago as PDFs (how thoughtful!), but ask for that same data in Excel format and suddenly they act like you've requested nuclear launch codes. This project was born from that exact frustration during tax season, when I discovered that even expensive "professional" solutions like Adobe Acrobat Pro and Nitro PDF utterly failed at the seemingly simple task of converting bank statements to usable spreadsheets.
+Banks have mastered a special kind of digital irony: they'll happily store and provide your statements from 7+ years ago as PDFs, but ask for that same data in Excel format and suddenly they act like you've requested nuclear launch codes. This project was born from that exact frustration during tax season, when I discovered that even expensive "professional" solutions like Adobe Acrobat Pro and Nitro PDF utterly failed at the seemingly simple task of converting bank statements to usable spreadsheets.
 
 So, without any paid viable solutions, I decided to create my own Python script to do the job. To my amazement, it worked **flawlessly** and did what Big Tech has failed to do. 
 
