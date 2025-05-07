@@ -9,11 +9,11 @@ This project was born out of necessity. I was doing my taxes and, to my surprise
 
 So, I decided to create my own Python script. To my amazement, it worked **flawlessly**. It processed **12 months of Chase Bank statements with thousands of transactions** in under a minute, and the output was perfectly organized. This tool saved me hours of manual work and helped me meet my tax deadline. 
 
-Now, I’m sharing this tool with you. Whether you’re an individual or a company dealing with hundreds of thousands of transactions, this script will make your life easier. And the best part? It’s **free**, **fast**, and **better than any paid solution**.
+Now, I’m sharing this tool with you. Whether you’re an individual or a company dealing with hundreds of thousands of transactions, this script will make your life easier. And the best part? It’s **free**, **fast**, and **better** than any paid solution for this task.
 
 ---
 
-## Why This Script is Special
+## Why This Script Rocks for converting Bank PDF Statements to Excel
 
 1. **Accurate Sorting**: The script organizes the data **exactly as it appears in the PDF**. It doesn’t mess up the order or randomly sort by dates. This is crucial because when you’re done converting, you’ll want to compare the PDF and Excel side by side to ensure everything lines up perfectly.
 
