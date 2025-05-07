@@ -1,4 +1,4 @@
-# PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windwos) 
+# PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows) 
 
 Please give me a Star on Github if you used this script! ⭐ Support This Project
 
