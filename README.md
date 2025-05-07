@@ -1,6 +1,4 @@
-PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows) 
-
-⭐ Please give me a Star on Github if you used this script! ⭐ 
+PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows)  
 
 This project was born out of necessity. I was doing my taxes and, to my surprise Adobe Acrobat Pro, Nitro PDF and other paid solutions could not properly convert my Bank PDF Statements into excel files properly 
 
@@ -13,6 +11,8 @@ So, I decided to create my own Python script. To my amazement, it worked **flawl
 The script harnesses the power of pdfplumber and pandas—specialized libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; If you wish to modify the script for other Bank Statement Layouts, simply share your bank's PDF format with your preffered Ai model (I used Claude Sonnet), along with the python file in this repo; be sure to tell your Ai what columns and format your Bank PDF has and ask it to rewrite the python script for you. I tested this with a couple of other Banks and it worked on the first try everytime with Claude Sonnet 3.7. 
 
 So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
+
+⭐ Please give me a Star on Github if you used this script! ⭐
 
 ---
 
