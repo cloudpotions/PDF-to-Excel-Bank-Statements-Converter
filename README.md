@@ -8,7 +8,9 @@ So, without any paid viable solutions, I decided to create my own Python script 
   <img src="https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter/raw/main/PDF2Excel.jpg" alt="PDF to Excel Bank Statement Converter">
 </p>
 
-The script harnesses the power of pdfplumber, pandas and openpyxl — Specialized python libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; If you wish to modify the script for other Bank Statement Layouts, simply share your bank's PDF format with your preffered Ai model (I used Claude Sonnet), along with the python file in this repo; be sure to tell your Ai what columns and format your Bank PDF has and ask it to rewrite the python script for you. I tested this with a couple of other Banks and it worked on the first try everytime with Claude Sonnet 3.7. 
+The script harnesses the power of pdfplumber, pandas and openpyxl — Specialized python libraries that run circles around commercial OCR solutions—to process thousands of transactions with 99% accuracy in under a minute. It's been battle-tested with Chase Bank statements but adapts easily to other financial institutions; 
+
+Universal Compatibility: Need to process statements from a different bank? The framework adapts effortlessly across financial institutions. Simply share sample statement screenshots of your Bank PDF Statements (or similar) with your preferred AI tool (or engage my AI consulting services). I've successfully adapted this tool for multiple major banks—transforming what would normally be days of custom development into a 30-minute configuration process.
 
 So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
 
