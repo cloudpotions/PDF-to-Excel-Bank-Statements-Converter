@@ -24,12 +24,9 @@ So if you're like me, trapped in the PDF banking purgatory with years of stateme
 
 2. **Handles Large Volumes**: While I tested it with 12 months of statements, this script can handle much more. Whether you have a year’s worth of data or several years, it will process everything efficiently.
 
-3. **Customizable**: If you’re not using Chase Bank, you can easily tweak the script to work with other banks. Just provide the script to your favorite AI (like ChatGPT) along with screenshots of your bank’s PDF format and a description of the columns you need.
+3. **Customizable**: If you’re not using Chase Bank, you can easily tweak the script to work with other banks. Just provide the python script for analysis to your favorite AI, along with your Banks PDF (or screenshots) and it should be able to easily tweak the code for you. Focus your LLM training on Columns (For example, Chase calls a column "details", another bank might call it "notes"). 
 
-4. **Saves Time**: This script processes thousands of transactions in under a minute. Compare that to Adobe Pro or other paid tools, which are slower and less accurate.
-
-5. **Free and Open Source**: Unlike expensive software, this tool leverages the power of Python and open-source libraries like `pdfplumber` and `pandas`. It’s completely free to use.
-
+4. **Free and Open Source**
 ---
 
 ## How It Works
