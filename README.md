@@ -26,7 +26,7 @@ So if you're like me, trapped in the PDF banking purgatory with years of stateme
 
 3. **Customizable**: If you’re not using Chase Bank, you can easily tweak the script to work with other banks. Just provide the python script for analysis to your favorite AI, along with your Banks PDF (or screenshots) and it should be able to easily tweak the code for you. Focus your LLM training on Columns (For example, Chase calls a column "details", another bank might call it "notes"). 
 
-4. **Free and Open Source**
+4. **Free and Open Source**: Just pure Python efficiency that processes thousands of transactions without sending a single byte to external servers - You can even run it on a junky spare laptop, no cloud processing fees, no token consumption, no data privacy concerns. Local Python Rocks
 ---
 
 ## How It Works
