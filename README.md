@@ -10,7 +10,7 @@ So, without any paid viable solutions, I decided to create my own Python script 
 
 This script is far superior for processing PDF Bank statements to excel because it uses targeted libraries like pdfplumber, pandas, and openpyxl to accurately extract and organize transaction data without the pitfalls of OCR technology. Unlike Adobe, which relies on OCR that can misinterpret text and disrupt the order of transactions, this script directly extracts data from the PDF's structure, ensuring precision and maintaining the original sequence. It also automates batch processing, generates detailed verification sheets, and provides financial summaries, making it a highly efficient and reliable solution tailored specifically for this task.
 
-Universal Compatibility: Need to process statements from a different bank? The framework adapts effortlessly across financial institutions. Simply share the python file in this repo along with a sample PDF statement (or screenshot) to a compatabile Ai, and it should be able to tweak the script for you easily. I am also available for consulting - https://www.linkedin.com/in/ellis-jesse/
+Universal Compatibility: Need to process statements from a different bank? (Script is built for Chase Bank PDF Statements) The framework adapts effortlessly across financial institutions. Simply share the python file in this repo along with a sample PDF statement (or screenshot) to a compatabile Ai, and it should be able to tweak the script for you easily. I am also available for consulting - https://www.linkedin.com/in/ellis-jesse/
 
 So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
 
