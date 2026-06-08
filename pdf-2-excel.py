@@ -118,7 +118,16 @@ def main():
                 continue
             if "Beginning Balance" in line:
                 continue
-                
+
+            # At each page break Chase emits a "*start*/*end*transaction detail"
+            # marker that the PDF text layer merges onto the front of the adjacent
+            # transaction line, and the marker absorbs the first digit of the date:
+            #   "*end*transac0tion detail1/05 Zelle Payment ... 575.00 6,263.00"
+            # Such a line no longer begins with MM/DD, so the date match below
+            # skipped it and the transaction was lost. Strip the marker and put the
+            # absorbed date digit back so the line parses normally.
+            line = re.sub(r'^\*(?:start|end)\*transac(\d?)tion detail', r'\1', line.strip())
+
             date_match = re.match(r'^(\d{2}/\d{2})', line.strip())
             if date_match:
                 current_date = date_match.group(1)
