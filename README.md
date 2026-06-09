@@ -1,194 +1,195 @@
-PDF to Excel Bank Statement Converter: The Tool Big Finance Forgot to Build (works on Linux / Mac OS and Windows)  
+# PDF to Excel Bank Statement Converter
+### The tool big finance forgot to build — works on Windows, macOS, and Linux
 
-Banks have mastered a special kind of digital irony: they'll happily store and provide your statements from 7+ years ago as PDFs, but ask for that same data in Excel format and suddenly they act like you've requested nuclear launch codes. This project was born from that exact frustration during tax season, when I discovered that even expensive "professional" solutions like Adobe Acrobat Pro and Nitro PDF utterly failed at the seemingly simple task of converting bank statements to usable spreadsheets.
+Banks have mastered a special kind of digital irony: they'll happily hand you statements from 7+ years ago as PDFs, but ask for that same data in Excel and suddenly it's like you requested nuclear launch codes. This project was born from that exact frustration during tax season — when I found that even expensive "professional" tools like Adobe Acrobat Pro and Nitro PDF utterly failed at the seemingly simple task of turning bank statements into usable spreadsheets.
 
-So, without any paid viable solutions, I decided to create my own Python script to do the job that works **flawlessly**
+So, with no viable paid solution, I wrote my own Python script to do the job — and it works **flawlessly**.
 
 <p align="center">
   <img src="https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter/raw/main/PDF2Excel.jpg" alt="PDF to Excel Bank Statement Converter">
 </p>
 
-This script is far superior for processing PDF Bank statements to excel because it uses targeted libraries like pdfplumber, pandas, and openpyxl to accurately extract and organize transaction data without the pitfalls of OCR technology. Unlike Adobe, which relies on OCR that can misinterpret text and disrupt the order of transactions, this script directly extracts data from the PDF's structure, ensuring precision and maintaining the original sequence. It also automates batch processing, generates detailed verification sheets, and provides financial summaries, making it a highly efficient and reliable solution tailored specifically for this task.
+This script beats OCR-based tools because it uses targeted libraries — **pdfplumber, pandas, and openpyxl** — to read the PDF's actual text structure instead of "looking at" the page. Adobe-style OCR can misread characters and scramble the order of transactions; this script extracts data directly, preserving precision **and** the original sequence. It also batch-processes a whole folder at once, writes a verification sheet, and prints financial summaries.
 
-Universal Compatibility: Need to process statements from a different bank? (Script is built for Chase Bank PDF Statements) The framework adapts effortlessly across financial institutions. Simply share the python file in this repo along with a sample PDF statement (or screenshot) to a compatabile Ai, and it should be able to tweak the script for you easily. I am also available for consulting - https://www.linkedin.com/in/ellis-jesse/
+**Universal compatibility:** the script targets **Chase** checking statements, but the framework adapts easily to other banks. Hand this script plus one sample statement (or a screenshot) to a capable AI and it can retarget the parser for you. I'm also available for consulting — https://www.linkedin.com/in/ellis-jesse/
 
-So if you're like me, trapped in the PDF banking purgatory with years of statements that refuse to cooperate with modern financial tools, you've finally found your escape route...
-
-⭐ Please give me a Star on Github if you used this script! ⭐
+⭐ If this script saved you time, please give the repo a Star! ⭐
 
 ---
 
-## Why This Script Rocks for converting Bank PDF Statements to Excel
-
-1. **Accurate Sorting**: The script organizes the data **exactly as it appears in the PDF**. It doesn’t mess up the order or randomly sort by dates. This is crucial because when you’re done converting, you’ll want to compare the PDF and Excel side by side to ensure everything lines up perfectly.
-
-2. **Handles Large Volumes**: While I tested it with 12 months of statements, this script can handle much more. Whether you have a year’s worth of data or several years, it will process everything efficiently.
-
-3. **Customizable**: If you’re not using Chase Bank, you can easily tweak the script to work with other banks. Just provide the python script for analysis to your favorite AI, along with your Banks PDF (or screenshots) and it should be able to easily tweak the code for you. Focus your LLM training on Columns (For example, Chase calls a column "details", another bank might call it "notes"). 
-
-4. **Free and Open Source**: Just pure Python efficiency that processes thousands of transactions without sending a single byte to external servers - You can even run it on a junky spare laptop; NO cloud processing fees, NO token consumption, NO data privacy concerns! Local Python Rocks
----
-
-## How It Works
-
-This script is a **GUI based tool**, so you don’t need to be a programmer to use it. Here’s what it does:
-
-1. **Select PDF Folder**: A pop-up window will ask you to select a folder with all the PDF documents you wish to process. It will process ALL PDF in that folder, so make sure you do not run it in Downloads folder - Save your PDF files to a new Folder (For example, Chase Bank Statements 2024 Folder)
-
-2. **Output Location**: The output file will be saved in the same folder that the PDFs are located in Step 1
-
- The script extracts transaction data from the PDFs and organizes it into a clean Excel spreadsheet with columns like:
-
-   - Date of Transaction
-   - Statement Date 
-   - Description
-   - Amount
-   - Balance
-   - Original Line
-   - Source File
-
-When the script is complete, the pop-up box will give you some statistics like how many files were processed and lines were added to the XLSX excel file. It will save the file with a naming convention of FolderName/Date/Time.xlsx
+## Contents
+- [Why this script rocks](#why-this-script-rocks)
+- [Quick start](#quick-start)
+- [How it works](#how-it-works)
+- [Output columns](#output-columns)
+- [Verify your results](#verify-your-results-please-actually-do-this)
+- [Detailed setup](#detailed-setup) — [Windows](#windows) · [macOS](#macos) · [Linux](#linux)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-Special Note: You must have Python installed on your OS along with the libraries pdfplumber, pandas, and openpyxl. To use the script, download PDF-2-Excel.py from this repository and run the script and the Gui will do the rest! I am also going to include very detailed Installation instruction at the bottom of this ReadME file for newbies that do not know how to run Python Files with dependencies... 
+## Why this script rocks
 
+1. **Accurate ordering** — data comes out **exactly as it appears in the PDF**, so you can lay the PDF and Excel side by side and check them line for line.
+2. **Handles large volumes** — tested on 12 months at a time; it'll happily chew through years of statements.
+3. **Customizable** — not a Chase customer? Point an AI at this script plus your bank's PDF and it can adapt the column logic (e.g., Chase calls a column "Details"; your bank might call it "Notes").
+4. **Free, open source, and 100% local** — pure Python, no cloud, no fees, no tokens, no data ever leaving your machine. Run it on a junky spare laptop if you want.
 
-Even though the script maintains exact PDF order, manual review is essential! 
+---
 
-My suggestion for Double Entry Accounting with my script: 
+## Quick start
 
-1. Open the PDF and the generated Excel side-by-side
-2. Review page-by-page (e.g., January 2024, then February 2024,etc). 
-3. Use a physical notepad with a pen to o to mark each confirmed section you have double checked.
-4. Once you are done, repeat steps 1-3 AGAIN! Do not be lazy. The program will most likely do all of the work for you (I have never seen a mistake yet in my testing), but it still requires human intervention and eyes to be safe!
+**1. Install Python 3** (if you don't have it) — see [Detailed setup](#detailed-setup) for your OS.
+
+**2. Install the libraries:**
+```
+pip install pdfplumber pandas openpyxl
+```
+
+**3. Put your statements in their own folder** (e.g. `Chase Statements 2024`). The script processes **every PDF in the folder you choose**, so don't run it on a junk-drawer folder like `Downloads`.
+
+**4. Run it** — two equally good ways:
+
+```
+# A) Graphical: opens a folder picker
+python3 pdf-2-excel.py
+
+# B) Direct: hand it the folder and skip the picker (fastest)
+python3 pdf-2-excel.py "/path/to/Chase Statements 2024"
+```
+
+The Excel file lands in **the same folder as your PDFs**, named `FolderName_chase_transactions_<date>_<time>.xlsx`.
+
+> On Windows you can also just **double-click `pdf-2-excel.py`**.
+
+---
+
+## How it works
+
+This is a **GUI tool** — no programming required.
+
+1. **Pick the folder** holding your PDFs (a file picker pops up), or pass the path on the command line to skip the picker.
+2. The script reads every PDF, extracts the transactions, and **saves the Excel right next to your PDFs.**
+3. A summary box tells you how many statements and transactions were processed.
+
+### Output columns
+| Column | Meaning |
+|---|---|
+| `Statement_Date` | The statement the row came from |
+| `Date` | Transaction date (year inferred correctly across Dec/Jan boundaries) |
+| `Description` | Merchant / payee text |
+| `Amount` | Positive = credit, negative = debit |
+| `Balance` | Running balance printed on the statement |
+| `Original_Line` | The raw line as extracted (for auditing) |
+| `Source_File` | Which PDF the row came from |
+
+A second **`Verification`** sheet keeps the original line next to each parsed amount so you can audit fast.
+
+---
+
+## Verify your results (please — actually do this)
+
+The script preserves exact PDF order, but you should still review. My method for safe, double-entry checking:
+
+1. Open the PDF and the generated Excel **side by side**.
+2. Review **page by page** (Jan 2024, then Feb 2024, …).
+3. Tick off each confirmed section with a pen on a physical notepad.
+4. When you finish — **do it again.** Don't be lazy. The script does the heavy lifting (I've yet to see it miss in testing), but a second human pass is cheap insurance.
 
 Happy converting! 🚀
 
+---
 
-While most developers visiting this repository can simply download and run the pdf-2-excel.py script, Cloud Potions believes in making technology accessible to everyone. If you're new to Python or programming in general, I've created below a comprehensive guide to run this script on Linux, Mac OS or Windows ... 
+## Detailed setup
 
-## Advanced Setup Instructions
+You must have **Python 3** plus the libraries **pdfplumber, pandas, and openpyxl**. Below are step-by-step instructions for each OS for folks newer to Python.
 
-### Windows Setup
-
-1. **Install Python**
-   - Download Python from [python.org](https://www.python.org/downloads/)
-   - Run the installer
-   - ✓ CHECK "Add Python to PATH" during installation (very important!)
-   - Click "Install Now"
-
-2. **Install Required Packages**
-   - Open Command Prompt (search for "cmd" in Start menu)
-   - Copy and paste this command:
-     ```
-     pip install pdfplumber pandas openpyxl
-     ```
-   - Press Enter and wait for installation to complete
-
-3. **Run the Script**
-   - Download `pdf-2-excel.py` from this repository
-   - Double-click the Python script file to run it
-   - If double-clicking doesn't work, right-click and select "Open with" → "Python"
-
-### macOS Setup
+### Windows
 
 1. **Install Python**
-   - Download Python from [python.org](https://www.python.org/downloads/)
-   - Run the installer package
-   - Follow the installation instructions
-
-2. **Install Required Packages**
-   - Open Terminal (from Applications → Utilities → Terminal)
-   - Copy and paste this command:
-     ```
-     pip3 install pdfplumber pandas openpyxl
-     ```
-   - Press Enter and wait for installation to complete
-
-3. **Run the Script**
-   - Download `pdf-2-excel.py` from this repository
-   - Open Terminal and navigate to where you saved the file:
-     ```
-     cd ~/Downloads  (or wherever you saved it)
-     ```
-   - Make the script executable:
-     ```
-     chmod +x pdf-2-excel.py
-     ```
-   - Run the script:
-     ```
-     python3 pdf-2-excel.py
-     ```
-
-### Linux Setup
-
-#### Option 1: Quick Setup (Easiest but Option 2 is recommended below as it is safer) 
-
-This method works on most Linux systems but uses the `--break-system-packages` flag, which bypasses some system protections.
-
-1. **Install Python and Required Tools**
-   - Open Terminal and run:
-     ```
-     sudo apt update
-     sudo apt install python3 python3-pip python3-tk
-     ```
-   - For Fedora/RHEL:
-     ```
-     sudo dnf install python3 python3-pip python3-tkinter
-     ```
-
-2. **Install Required Packages**
-   - In Terminal, run:
-     ```
-     pip3 install --break-system-packages pdfplumber pandas openpyxl
-     ```
-   - **Note:** This flag overrides system package protections but is the simplest approach.
-
-3. **Run the Script**
-   - Download `pdf-2-excel.py` from this repository
-   - Make the script executable:
-     ```
-     chmod +x pdf-2-excel.py
-     ```
-   - Run the script:
-     ```
-     python3 pdf-2-excel.py
-     ```
-
-#### Option 2: Using a Virtual Environment (Recommended)
-This method is safer but requires a few more commands:
-
-1. **Install Python and Required Tools**
-   ```
-   sudo apt update
-   sudo apt install python3 python3-pip python3-venv python3-tk
-   ```
-
-2. **Create and Activate Virtual Environment**
-   ```
-   python3 -m venv chase_env
-   source chase_env/bin/activate
-   ```
-   After running these commands, your terminal prompt should change to show "(chase_env)" at the beginning, indicating the virtual environment is active.
-
-3. **Install Required Packages in the Virtual Environment**
+   - Download from [python.org](https://www.python.org/downloads/) and run the installer.
+   - ✅ **Check "Add Python to PATH"** during install (important!), then click **Install Now**.
+2. **Install the libraries** — open **Command Prompt** (search "cmd") and run:
    ```
    pip install pdfplumber pandas openpyxl
    ```
+3. **Run the script**
+   - Download `pdf-2-excel.py` from this repo.
+   - **Double-click it**, or from Command Prompt:
+     ```
+     python pdf-2-excel.py
+     ```
 
-4. **Run the Script** 
-   Make sure you're still in the activated virtual environment (you should see "(chase_env)" in your prompt) and in the same directory as the script. If you need to navigate to your downloads folder:
+### macOS
+
+1. **Install Python** from [python.org](https://www.python.org/downloads/) (run the installer package).
+2. **Install the libraries** — open **Terminal** (Applications → Utilities → Terminal):
    ```
-   cd ~/Downloads  # or wherever you saved the script
-   python pdf-2-excel.py
+   pip3 install pdfplumber pandas openpyxl
+   ```
+3. **Run the script**
+   ```
+   cd ~/Downloads        # or wherever you saved it
+   python3 pdf-2-excel.py
    ```
 
-5. **When Finished**
-   To exit the virtual environment when you're done:
-   ```
-   deactivate
-   ```
+### Linux
+
+Linux needs Tk for the GUI, and (optionally) `zenity` for a nicer native folder picker.
+
+**1. Install Python, Tk, and the picker:**
+```
+# Debian / Ubuntu
+sudo apt update
+sudo apt install python3 python3-pip python3-venv python3-tk zenity
+
+# Fedora / RHEL
+sudo dnf install python3 python3-pip python3-tkinter zenity
+```
+> `zenity` is optional but recommended — with it, the folder picker is the clean native GNOME/GTK one instead of Tk's clunky built-in dialog. Without it, the script falls back to the Tk picker automatically.
+
+**2. Install the libraries — recommended: a virtual environment** (keeps your system Python clean):
+```
+python3 -m venv chase_env
+source chase_env/bin/activate          # your prompt now shows (chase_env)
+pip install pdfplumber pandas openpyxl
 ```
 
-```markdown
+**3. Run it** (while the venv is active):
+```
+python3 pdf-2-excel.py                          # opens the folder picker
+# or, skip the picker entirely:
+python3 pdf-2-excel.py "/path/to/your/folder"
+```
+
+**4. When you're done**, leave the virtual environment:
+```
+deactivate
+```
+
+<details>
+<summary><b>Prefer not to use a virtual environment? (quick one-liner)</b></summary>
+
+You can install the libraries straight into the system Python with the `--break-system-packages` flag. It's quicker but bypasses a safety guard, so the venv route above is preferred:
+```
+pip install --break-system-packages pdfplumber pandas openpyxl
+python3 pdf-2-excel.py
+```
+</details>
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `ModuleNotFoundError: No module named 'pdfplumber'` (or pandas/openpyxl) | Run the `pip install` step. On Linux, make sure your venv is **activated**, or use the `--break-system-packages` one-liner. |
+| `No module named 'tkinter'` / no window appears (Linux) | Install Tk: `sudo apt install python3-tk` (Debian/Ubuntu) or `sudo dnf install python3-tkinter` (Fedora). |
+| The Linux folder picker feels clunky | Install `zenity` for the native GNOME picker (see Linux step 1), or just pass the folder path on the command line. |
+| Running over SSH / no display | Pass the folder path directly: `python3 pdf-2-excel.py "/path/to/folder"` — it runs fully in the terminal, no GUI needed. |
+| `command not found: python3` (Windows) | Use `python` instead of `python3` on Windows, and make sure "Add Python to PATH" was checked at install. |
+| No transactions found | Confirm the PDFs are genuine **Chase** statements with a "TRANSACTION DETAIL" section. Other banks need the parser retargeted (see "Customizable" above). |
+
+---
+
+*Tip: inside an activated virtual environment, `python` and `python3` point to the same Python 3, so either works there. Outside a venv, prefer `python3` on macOS/Linux and `python` on Windows.*
