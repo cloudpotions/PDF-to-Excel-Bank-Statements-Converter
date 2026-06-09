@@ -47,21 +47,55 @@ This script beats OCR-based tools because it uses targeted libraries — **pdfpl
 pip install pdfplumber pandas openpyxl
 ```
 
-**3. Put your statements in their own folder** (e.g. `Chase Statements 2024`). The script processes **every PDF in the folder you choose**, so don't run it on a junk-drawer folder like `Downloads`.
+**3. Make a folder and put your statement PDFs in it.** Create a new folder (e.g. `Chase Statements 2024`) and put **only** the PDF statements you want to convert inside it.
 
-**4. Run it** — two equally good ways:
+> ⚠️ **Important — there is no picking individual files.** You point the tool at **one folder**, and it automatically converts **every single PDF inside that folder.** So keep that folder clean — put nothing in it except the statements you want converted. (Don't aim it at something like your whole `Downloads` folder.)
 
+**4. Run the script.** First, save `pdf-2-excel.py` somewhere easy to find — the steps below assume you saved it in your **Downloads** folder.
+
+### Option 1 — Double-click it (try this first)
+
+Most of the time you can just **double-click `pdf-2-excel.py`** and a welcome window + folder picker will appear. If it instead opens in a text editor, or nothing happens, you need to give the file permission to run:
+
+- **Windows:** double-click usually works as long as Python was installed with **"Add Python to PATH"** checked. If it opens in an editor, right-click the file → **Open with → Python**.
+- **macOS:** right-click the file → **Open With → Python Launcher**. The first time, macOS may warn it's from an unidentified developer — right-click → **Open**, then confirm **Open**. To mark it runnable, open **Terminal** and run:
+  ```
+  chmod +x ~/Downloads/pdf-2-excel.py
+  ```
+- **Linux:** make it executable first — either right-click → **Properties → Permissions → ✅ "Allow executing file as program"**, or in a terminal run:
+  ```
+  chmod +x ~/Downloads/pdf-2-excel.py
+  ```
+  Then double-click and choose **Run** if your file manager asks "Run" vs "Display".
+
+### Option 2 — Use the Terminal / Command Prompt (always works)
+
+If double-clicking is being fussy, this way is rock-solid. Two short steps:
+
+*Step A — go to the folder where you saved the script:*
 ```
-# A) Graphical: opens a folder picker
+# Linux or macOS
+cd ~/Downloads
+
+# Windows (Command Prompt)
+cd %USERPROFILE%\Downloads
+```
+
+*Step B — start the script:*
+```
+# Linux or macOS
 python3 pdf-2-excel.py
 
-# B) Direct: hand it the folder and skip the picker (fastest)
-python3 pdf-2-excel.py "/path/to/Chase Statements 2024"
+# Windows
+python pdf-2-excel.py
 ```
 
-The Excel file lands in **the same folder as your PDFs**, named `FolderName_transactions_<date>_<time>.xlsx`.
+A folder picker then pops up — **select the folder you made in step 3** (the one holding your PDFs). The script does the rest.
 
-> On Windows you can also just **double-click `pdf-2-excel.py`**.
+> 💡 **Optional shortcut:** skip the picker by typing the folder's path right after the command, e.g.
+> `python3 pdf-2-excel.py "/home/you/Chase Statements 2024"`
+
+When it finishes, the Excel file is saved **inside that same folder, next to your PDFs**, named `FolderName_transactions_<date>_<time>.xlsx`.
 
 ---
 
@@ -69,8 +103,8 @@ The Excel file lands in **the same folder as your PDFs**, named `FolderName_tran
 
 This is a **GUI tool** — no programming required.
 
-1. **Pick the folder** holding your PDFs (a file picker pops up), or pass the path on the command line to skip the picker.
-2. The script reads every PDF, extracts the transactions, and **saves the Excel right next to your PDFs.**
+1. **You choose one folder** (a folder picker pops up — you select the *folder*, not individual files). Or pass the folder's path on the command line to skip the picker.
+2. The script then **automatically converts every PDF inside that folder**, extracts the transactions, and **saves one combined Excel file right next to your PDFs.**
 3. A summary box tells you how many statements and transactions were processed.
 
 ### Output columns
