@@ -59,7 +59,7 @@ python3 pdf-2-excel.py
 python3 pdf-2-excel.py "/path/to/Chase Statements 2024"
 ```
 
-The Excel file lands in **the same folder as your PDFs**, named `FolderName_chase_transactions_<date>_<time>.xlsx`.
+The Excel file lands in **the same folder as your PDFs**, named `FolderName_transactions_<date>_<time>.xlsx`.
 
 > On Windows you can also just **double-click `pdf-2-excel.py`**.
 

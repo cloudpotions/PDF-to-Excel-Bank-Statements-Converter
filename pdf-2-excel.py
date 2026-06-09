@@ -346,7 +346,7 @@ def main():
 
         folder_name = os.path.basename(os.path.normpath(folder))
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        excel_filename = f"{folder_name}_chase_transactions_{timestamp}.xlsx"
+        excel_filename = f"{folder_name}_transactions_{timestamp}.xlsx"
         output_path = os.path.join(folder, excel_filename)
 
         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
