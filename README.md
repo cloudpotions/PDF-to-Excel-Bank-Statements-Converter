@@ -46,7 +46,7 @@ Two quick things first:
 
 > ⚠️ **There's no picking individual files.** You choose a *folder*, and the tool converts **every PDF inside it**. So keep that folder clean — nothing but the statements you want converted.
 
-Now open your operating system below and follow it top to bottom. (Each command has its own copy button — just paste it and press Enter.)
+**Now click your operating system below to open its setup steps, then follow them in order.**
 
 <details>
 <summary><b>🪟 &nbsp;Windows</b></summary>
@@ -125,10 +125,11 @@ No programming required — it's all clicks.
 2. The script **automatically converts every PDF inside that folder** and **saves one combined Excel file right next to your PDFs.**
 3. A summary box reports how many statements and transactions were processed.
 
-<details>
-<summary><b>📊 &nbsp;What's in the output spreadsheet</b></summary>
-
 <br>
+
+### 📊 What's in the output spreadsheet
+
+The main **`Transactions`** sheet has these columns:
 
 | Column | Meaning |
 |---|---|
@@ -142,8 +143,6 @@ No programming required — it's all clicks.
 | `Source_File_Page_Number` | The page **inside that PDF** where the row appears (1-based, matches your PDF viewer) — so you can jump straight to it |
 
 A second **`Verification`** sheet keeps the original line — plus the source file and page number — next to each parsed amount, so you can audit and locate any row fast.
-
-</details>
 
 ---
 
