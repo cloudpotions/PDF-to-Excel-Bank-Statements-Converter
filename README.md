@@ -23,6 +23,7 @@ This script beats OCR-based tools because it uses targeted libraries — **pdfpl
 - [How it works](#how-it-works)
 - [Output columns](#output-columns)
 - [Verify your results](#verify-your-results-please-actually-do-this)
+- [Use it with ANY bank or credit card](#use-it-with-any-bank-or-credit-card-5-minute-ai-tweak)
 - [Detailed setup](#detailed-setup) — [Windows](#windows) · [macOS](#macos) · [Linux](#linux)
 - [Troubleshooting](#troubleshooting)
 
@@ -32,7 +33,7 @@ This script beats OCR-based tools because it uses targeted libraries — **pdfpl
 
 1. **Accurate ordering** — data comes out **exactly as it appears in the PDF**, so you can lay the PDF and Excel side by side and check them line for line.
 2. **Handles large volumes** — tested on 12 months at a time; it'll happily chew through years of statements.
-3. **Customizable** — not a Chase customer? Point an AI at this script plus your bank's PDF and it can adapt the column logic (e.g., Chase calls a column "Details"; your bank might call it "Notes").
+3. **Works with any bank or card** — built and tested for Chase, but it's designed to be the *foundation* for any statement. Hand it to any AI with a sample of your PDF and it adapts in about 5 minutes — see [Use it with ANY bank or credit card](#use-it-with-any-bank-or-credit-card-5-minute-ai-tweak) for a ready-made prompt.
 4. **Free, open source, and 100% local** — pure Python, no cloud, no fees, no tokens, no data ever leaving your machine. Run it on a junky spare laptop if you want.
 
 ---
@@ -97,6 +98,80 @@ The script preserves exact PDF order, but you should still review. My method for
 4. When you finish — **do it again.** Don't be lazy. The script does the heavy lifting (I've yet to see it miss in testing), but a second human pass is cheap insurance.
 
 Happy converting! 🚀
+
+---
+
+## Use it with ANY bank or credit card (≈5-minute AI tweak)
+
+This script was tested and works **perfectly on Chase checking-account statements.** If you feed it a **different bank**, or a **credit-card statement**, it most likely **won't work as-is** — the layout, column names, and date formats are different.
+
+That's expected, and it's not a problem. **This script is the foundation for converting any statement, and adapting it takes about 5 minutes with any AI** (ChatGPT, Claude, Gemini, Copilot, etc.). You don't need to know how to code.
+
+**Here's all you do:**
+
+1. Grab **one sample PDF** of the statement you want to convert (one page is enough).
+2. Open any AI chat that can read files/images.
+3. **Paste in the full `pdf-2-excel.py` script**, attach (or paste a screenshot of) your sample statement, and then paste the prompt below.
+4. Run the modified script it gives you. Done.
+
+### 📋 Copy-paste this prompt
+
+```text
+I have a working Python script (pasted below) that converts CHASE checking-account
+PDF statements into an Excel spreadsheet. How it works: it uses pdfplumber to read
+the PDF text, finds the "TRANSACTION DETAIL" section, and parses every line that
+starts with a date (MM/DD) into Date, Description, Amount, and a running Balance —
+then writes them to Excel in the EXACT order they appear on the statement.
+
+I want to use it on a DIFFERENT document instead: [describe yours — e.g. "a Bank of
+America checking statement" or "an American Express credit-card statement"]. I've
+attached a sample. Its layout, headers, column names, and date format are probably
+different from Chase. Please modify the script to work with my statement.
+
+These requirements are critical — read them carefully:
+
+1. PRESERVE EXACT ORDER. The script intentionally keeps transactions in the order
+   they appear on the statement (it tags each with a within-statement sequence
+   number and sorts by date + that sequence). I verify results by laying the PDF and
+   the Excel side by side, line for line, so the order must match the PDF exactly.
+   Do not silently re-sort in a way that breaks the original sequence.
+
+2. DON'T LOSE TRANSACTIONS AT PAGE BREAKS. The original Chase version had a bug where
+   transactions at the bottom/top of a page were silently dropped: the PDF text layer
+   glued a page marker ("*start*/*end*transaction detail") onto the front of a real
+   transaction line, so the line no longer started with a date and the parser skipped
+   it. We fixed it by stripping that marker (and restoring a digit it had eaten)
+   before parsing. Look for the EQUIVALENT trap in my statement — repeated page
+   headers/footers, "continued" markers, summary/subtotal rows, or multi-line
+   descriptions that wrap onto a second line — and make sure NO real transaction is
+   ever silently lost.
+
+3. MAP MY COLUMNS. Tell me what columns my statement actually has and map them
+   correctly. Banks differ: some call it "Posting Date" not "Date", some split money
+   into separate "Debits" and "Credits" columns instead of one signed Amount, etc.
+
+4. CREDIT CARDS WORK DIFFERENTLY. If this is a credit-card statement, there is usually
+   NO running balance on each line — instead there's a Previous Balance, then
+   Purchases/Charges, Payments, and Credits that net to a New Balance. Adapt the
+   parsing and the output columns to fit that model.
+
+5. ADD A SELF-CHECK. After parsing, reconcile against the statement's own printed
+   totals — e.g. "Beginning Balance + sum of transactions = Ending Balance" for
+   checking, or "Previous Balance + charges − payments/credits = New Balance" for a
+   credit card — and print a clear warning if it doesn't reconcile. This is how we
+   catch dropped or duplicated lines automatically.
+
+Then give me the COMPLETE modified script, and a short plain-English summary of
+exactly what you changed and why.
+
+--- SCRIPT START ---
+[paste the full contents of pdf-2-excel.py here]
+--- SCRIPT END ---
+```
+
+> **Tip:** if the first result misses a few rows, tell the AI *"these specific
+> transactions are missing: …"* and paste the offending lines. The reconciliation
+> self-check from requirement #5 will usually flag them for you automatically.
 
 ---
 
