@@ -47,7 +47,7 @@ This script beats OCR-based tools because it uses targeted libraries — **pdfpl
 pip install pdfplumber pandas openpyxl
 ```
 
-**3. Make a folder and put your statement PDFs in it.** Create a new folder (e.g. `Chase Statements 2024`) and put **only** the PDF statements you want to convert inside it.
+**3. Make a folder and put your statement PDFs in it.** Create a new folder (e.g. `Chase Statements 2026`) and put **only** the PDF statements you want to convert inside it.
 
 > ⚠️ **Important — there is no picking individual files.** You point the tool at **one folder**, and it automatically converts **every single PDF inside that folder.** So keep that folder clean — put nothing in it except the statements you want converted. (Don't aim it at something like your whole `Downloads` folder.)
 
@@ -93,7 +93,7 @@ python pdf-2-excel.py
 A folder picker then pops up — **select the folder you made in step 3** (the one holding your PDFs). The script does the rest.
 
 > 💡 **Optional shortcut:** skip the picker by typing the folder's path right after the command, e.g.
-> `python3 pdf-2-excel.py "/home/you/Chase Statements 2024"`
+> `python3 pdf-2-excel.py "/home/you/Chase Statements 2026"`
 
 When it finishes, the Excel file is saved **inside that same folder, next to your PDFs**, named `FolderName_transactions_<date>_<time>.xlsx`.
 
@@ -128,7 +128,7 @@ A second **`Verification`** sheet keeps the original line — plus the source fi
 The script preserves exact PDF order, but you should still review. My method for safe, double-entry checking:
 
 1. Open the PDF and the generated Excel **side by side**.
-2. Review **page by page** (Jan 2024, then Feb 2024, …).
+2. Review **page by page** (Jan 2026, then Feb 2026, …).
 3. Tick off each confirmed section with a pen on a physical notepad.
 4. When you finish — **do it again.** Don't be lazy. The script does the heavy lifting (I've yet to see it miss in testing), but a second human pass is cheap insurance.
 
@@ -144,60 +144,77 @@ That's expected, and it's not a problem. **This script is the foundation for con
 
 **Here's all you do:**
 
-1. Grab **one sample PDF** of the statement you want to convert (one page is enough).
-2. Open any AI chat that can read files/images.
-3. **Paste in the full `pdf-2-excel.py` script**, attach (or paste a screenshot of) your sample statement, and then paste the prompt below.
-4. Run the modified script it gives you. Done.
+1. **Share your statement PDF with the AI — the whole file is best.** Pages often differ (the first page may have a summary, the middle pages hold the transactions, the last pages can be legal fine print), so don't trim it to a single page. **You do not need to cut or edit the PDF.**
+2. **If your PDF is huge (say 100+ pages), you still don't have to edit it.** The prompt below tells the AI to analyze the structure itself and focus only on the pages that matter. The *only* time to trim is if your AI rejects the upload for being too large — then upload roughly the **first 10–15 pages**, which almost always covers the full repeating pattern.
+3. Open any AI that can read PDFs (ChatGPT, Claude, Gemini, Copilot, …).
+4. **Paste in the full `pdf-2-excel.py` script** and the prompt below, then attach your PDF.
+5. Run the modified script it gives you. Done.
 
 ### 📋 Copy-paste this prompt
 
 ```text
 I have a working Python script (pasted below) that converts CHASE checking-account
-PDF statements into an Excel spreadsheet. How it works: it uses pdfplumber to read
-the PDF text, finds the "TRANSACTION DETAIL" section, and parses every line that
-starts with a date (MM/DD) into Date, Description, Amount, and a running Balance —
-then writes them to Excel in the EXACT order they appear on the statement.
+PDF statements into an Excel spreadsheet. How it works: it reads the PDF text with
+pdfplumber page by page, finds the "TRANSACTION DETAIL" section, parses every line
+that starts with a date (MM/DD) into Date, Description, Amount and a running Balance,
+records which page each row came from, and writes everything to Excel in the EXACT
+order it appears on the statement.
 
 I want to use it on a DIFFERENT document instead: [describe yours — e.g. "a Bank of
 America checking statement" or "an American Express credit-card statement"]. I've
-attached a sample. Its layout, headers, column names, and date format are probably
+attached the PDF. Its layout, headers, column names and date format are probably
 different from Chase. Please modify the script to work with my statement.
 
-These requirements are critical — read them carefully:
+Work through these requirements IN ORDER and don't skip any:
 
-1. PRESERVE EXACT ORDER. The script intentionally keeps transactions in the order
-   they appear on the statement (it tags each with a within-statement sequence
-   number and sorts by date + that sequence). I verify results by laying the PDF and
-   the Excel side by side, line for line, so the order must match the PDF exactly.
-   Do not silently re-sort in a way that breaks the original sequence.
+1. ANALYZE THE PDF STRUCTURE FIRST — PROGRAMMATICALLY, NOT BY EYE. Before you change
+   the parser, write and run a short pdfplumber diagnostic that, for EACH page, prints
+   a quick fingerprint: page number, total line count, the top/header line, any
+   section markers, and how many lines look like real transactions (start with a date
+   and/or end in a money amount). Use that fingerprint to:
+     (a) find which pages actually contain transactions;
+     (b) flag pages whose layout DIFFERS — a cover/summary page, legal/disclosure
+         pages with no transactions, or a format that changes partway through;
+     (c) if the document is long, detect the REPEATING pattern (e.g. "every
+         transaction page looks like this") so you do NOT have to read every page by
+         hand — deeply analyze a representative sample plus any one-off pages.
+   Show me a short summary of what you found before writing the parser. (This also
+   means I can hand you a 100-page PDF and you figure out the structure yourself.)
 
-2. DON'T LOSE TRANSACTIONS AT PAGE BREAKS. The original Chase version had a bug where
-   transactions at the bottom/top of a page were silently dropped: the PDF text layer
-   glued a page marker ("*start*/*end*transaction detail") onto the front of a real
-   transaction line, so the line no longer started with a date and the parser skipped
-   it. We fixed it by stripping that marker (and restoring a digit it had eaten)
-   before parsing. Look for the EQUIVALENT trap in my statement — repeated page
-   headers/footers, "continued" markers, summary/subtotal rows, or multi-line
-   descriptions that wrap onto a second line — and make sure NO real transaction is
-   ever silently lost.
+2. PRESERVE EXACT ORDER. The script intentionally keeps transactions in the order they
+   appear on the statement (it tags each with a within-statement sequence number and
+   sorts by date + that sequence). I verify results by laying the PDF and the Excel
+   side by side, line for line, so the order must match the PDF exactly. Don't silently
+   re-sort in a way that breaks the original sequence.
 
-3. MAP MY COLUMNS. Tell me what columns my statement actually has and map them
-   correctly. Banks differ: some call it "Posting Date" not "Date", some split money
-   into separate "Debits" and "Credits" columns instead of one signed Amount, etc.
+3. NEVER SILENTLY DROP A TRANSACTION. The original Chase version had a bug where rows at
+   the bottom/top of a page were lost: the PDF text layer glued a page marker
+   ("*start*/*end*transaction detail") onto the front of a real transaction line, so it
+   no longer started with a date and the parser skipped it. We fixed it by stripping
+   that marker (and restoring a digit it had eaten). Look for the EQUIVALENT traps in
+   my statement — repeated page headers/footers, "continued" markers, subtotal/summary
+   rows, multi-line descriptions that wrap, or any page whose layout differs from the
+   rest — and make sure no real transaction is ever dropped.
 
-4. CREDIT CARDS WORK DIFFERENTLY. If this is a credit-card statement, there is usually
-   NO running balance on each line — instead there's a Previous Balance, then
-   Purchases/Charges, Payments, and Credits that net to a New Balance. Adapt the
-   parsing and the output columns to fit that model.
+4. MAP MY COLUMNS. Tell me what columns my statement actually has and map them
+   correctly. Banks differ: some say "Posting Date" not "Date", some split money into
+   separate "Debits" and "Credits" columns instead of one signed Amount, etc. Keep the
+   page-number column so I can still find each row back in the original PDF.
 
-5. ADD A SELF-CHECK. After parsing, reconcile against the statement's own printed
-   totals — e.g. "Beginning Balance + sum of transactions = Ending Balance" for
-   checking, or "Previous Balance + charges − payments/credits = New Balance" for a
-   credit card — and print a clear warning if it doesn't reconcile. This is how we
-   catch dropped or duplicated lines automatically.
+5. CREDIT CARDS WORK DIFFERENTLY. If this is a credit-card statement there is usually NO
+   running balance per line — instead there's a Previous Balance, then Purchases/
+   Charges, Payments and Credits that net to a New Balance. Adapt the parsing and the
+   output columns to fit that model.
 
-Then give me the COMPLETE modified script, and a short plain-English summary of
-exactly what you changed and why.
+6. ADD SELF-CHECKS (this is the safety net). After parsing: (a) reconcile against the
+   statement's own printed totals — "Beginning Balance + sum of transactions = Ending
+   Balance" for checking, or "Previous Balance + charges − payments/credits = New
+   Balance" for a credit card — and print a clear warning if it doesn't reconcile; and
+   (b) print a warning for any page that looked like it should hold transactions but
+   matched none, so a layout change can never silently swallow rows.
+
+Then show me, in this order: your short structure summary from step 1, the COMPLETE
+modified script, and a plain-English list of exactly what you changed and why.
 
 --- SCRIPT START ---
 [paste the full contents of pdf-2-excel.py here]
@@ -205,8 +222,9 @@ exactly what you changed and why.
 ```
 
 > **Tip:** if the first result misses a few rows, tell the AI *"these specific
-> transactions are missing: …"* and paste the offending lines. The reconciliation
-> self-check from requirement #5 will usually flag them for you automatically.
+> transactions are missing: …"* and paste the offending lines. The two self-checks
+> from requirement #6 (totals reconciliation + empty-page warning) will usually flag
+> them for you automatically.
 
 ---
 
