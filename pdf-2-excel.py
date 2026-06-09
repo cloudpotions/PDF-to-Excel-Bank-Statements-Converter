@@ -190,53 +190,61 @@ def determine_transaction_year(transaction_date, statement_date):
     return str(statement_year)
 
 
-def extract_chase_transactions(text, filename, statement_date):
-    """Extract transactions from Chase bank statement text."""
+def extract_chase_transactions(pages, filename, statement_date):
+    """Extract transactions from a Chase statement.
+
+    pages: a list of (page_number, page_text) tuples in PDF order. We walk the
+    pages one at a time (instead of merging them into a single blob) so we can
+    record which PDF page each transaction was found on. The
+    in_transaction_section flag is kept outside the page loop so it still carries
+    across page breaks, exactly as before."""
     transactions = []
     in_transaction_section = False
-    for line in text.split('\n'):
-        if "TRANSACTION DETAIL" in line:
-            in_transaction_section = True
-            continue
-        if not in_transaction_section:
-            continue
-        if "Beginning Balance" in line:
-            continue
+    for page_number, text in pages:
+        for line in text.split('\n'):
+            if "TRANSACTION DETAIL" in line:
+                in_transaction_section = True
+                continue
+            if not in_transaction_section:
+                continue
+            if "Beginning Balance" in line:
+                continue
 
-        # At each page break Chase emits a "*start*/*end*transaction detail"
-        # marker that the PDF text layer merges onto the front of the adjacent
-        # transaction line, and the marker absorbs the first digit of the date:
-        #   "*end*transac0tion detail1/05 Zelle Payment ... 575.00 6,263.00"
-        # Such a line no longer begins with MM/DD, so the date match below
-        # skipped it and the transaction was lost. Strip the marker and put the
-        # absorbed date digit back so the line parses normally.
-        line = re.sub(r'^\*(?:start|end)\*transac(\d?)tion detail', r'\1', line.strip())
+            # At each page break Chase emits a "*start*/*end*transaction detail"
+            # marker that the PDF text layer merges onto the front of the adjacent
+            # transaction line, and the marker absorbs the first digit of the date:
+            #   "*end*transac0tion detail1/05 Zelle Payment ... 575.00 6,263.00"
+            # Such a line no longer begins with MM/DD, so the date match below
+            # skipped it and the transaction was lost. Strip the marker and put the
+            # absorbed date digit back so the line parses normally.
+            line = re.sub(r'^\*(?:start|end)\*transac(\d?)tion detail', r'\1', line.strip())
 
-        date_match = re.match(r'^(\d{2}/\d{2})', line.strip())
-        if date_match:
-            current_date = date_match.group(1)
-            amounts = re.findall(r'-?[\d,]+\.\d{2}', line)
-            if len(amounts) >= 2:
-                amount_str = amounts[-2]
-                balance_str = amounts[-1]
-                amount = float(amount_str.replace(',', ''))
-                balance = float(balance_str.replace(',', ''))
-                desc_start = line.find(current_date) + len(current_date)
-                desc_end = line.rfind(amount_str)
-                description = line[desc_start:desc_end].strip()
+            date_match = re.match(r'^(\d{2}/\d{2})', line.strip())
+            if date_match:
+                current_date = date_match.group(1)
+                amounts = re.findall(r'-?[\d,]+\.\d{2}', line)
+                if len(amounts) >= 2:
+                    amount_str = amounts[-2]
+                    balance_str = amounts[-1]
+                    amount = float(amount_str.replace(',', ''))
+                    balance = float(balance_str.replace(',', ''))
+                    desc_start = line.find(current_date) + len(current_date)
+                    desc_end = line.rfind(amount_str)
+                    description = line[desc_start:desc_end].strip()
 
-                transaction_year = determine_transaction_year(current_date, statement_date)
-                full_date = f"{current_date}/{transaction_year}"
+                    transaction_year = determine_transaction_year(current_date, statement_date)
+                    full_date = f"{current_date}/{transaction_year}"
 
-                transactions.append({
-                    'Statement_Date': statement_date,
-                    'Date': full_date,
-                    'Description': description,
-                    'Amount': amount,
-                    'Balance': balance,
-                    'Original_Line': line.strip(),
-                    'Source_File': filename,
-                })
+                    transactions.append({
+                        'Statement_Date': statement_date,
+                        'Date': full_date,
+                        'Description': description,
+                        'Amount': amount,
+                        'Balance': balance,
+                        'Original_Line': line.strip(),
+                        'Source_File': filename,
+                        'Source_File_Page_Number': page_number,
+                    })
     return transactions
 
 
@@ -326,8 +334,10 @@ def main():
             print(f"\nProcessing: {filename} (Statement Date: {statement_date})")
             try:
                 with pdfplumber.open(pdf_path) as pdf:
-                    text = "".join((page.extract_text() or "") + "\n" for page in pdf.pages)
-                transactions = extract_chase_transactions(text, filename, statement_date)
+                    # (page_number, text) with page_number 1-based so it matches
+                    # the page you see in a PDF viewer.
+                    pages = [(i + 1, page.extract_text() or "") for i, page in enumerate(pdf.pages)]
+                transactions = extract_chase_transactions(pages, filename, statement_date)
                 print(f"Found {len(transactions)} transactions")
                 for i, t in enumerate(transactions):
                     t['Statement_Sequence'] = i + 1
@@ -352,7 +362,8 @@ def main():
         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
             df.drop(['Sort_Date', 'Statement_Sequence'], axis=1).to_excel(
                 writer, sheet_name='Transactions', index=False)
-            df[['Statement_Date', 'Date', 'Description', 'Amount', 'Original_Line']].to_excel(
+            df[['Statement_Date', 'Date', 'Description', 'Amount', 'Original_Line',
+                'Source_File', 'Source_File_Page_Number']].to_excel(
                 writer, sheet_name='Verification', index=False)
 
         # Console report

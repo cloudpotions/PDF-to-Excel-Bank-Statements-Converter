@@ -117,8 +117,9 @@ This is a **GUI tool** — no programming required.
 | `Balance` | Running balance printed on the statement |
 | `Original_Line` | The raw line as extracted (for auditing) |
 | `Source_File` | Which PDF the row came from |
+| `Source_File_Page_Number` | The page **inside that PDF** where the row appears (1-based, matches your PDF viewer) — so you can jump straight to it |
 
-A second **`Verification`** sheet keeps the original line next to each parsed amount so you can audit fast.
+A second **`Verification`** sheet keeps the original line — plus the source file and page number — next to each parsed amount, so you can audit and locate any row fast.
 
 ---
 
