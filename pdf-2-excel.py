@@ -67,6 +67,37 @@ class UI:
         else:
             print(f"\n=== {title} ===\n{message}\n")
 
+    def welcome(self, title, message, link_text, url):
+        """Like info(), but with a clickable link (to the adapt-it-for-another-bank
+        guide). Falls back to a plain message + the URL as text if anything fails or
+        there's no display."""
+        if not self.gui:
+            print(f"\n=== {title} ===\n{message}\n\n{link_text}\n{url}\n")
+            return
+        try:
+            import tkinter as tk
+            import webbrowser
+            top = tk.Toplevel(self.root)
+            top.title(title)
+            top.resizable(False, False)
+            frm = tk.Frame(top, padx=22, pady=18)
+            frm.pack(fill="both", expand=True)
+            tk.Label(frm, text=message, justify="left", wraplength=460).pack(anchor="w")
+            link = tk.Label(frm, text=link_text, fg="#1a4fa0", cursor="hand2",
+                            font=("TkDefaultFont", 10, "underline"))
+            link.pack(anchor="w", pady=(10, 0))
+            link.bind("<Button-1>", lambda e: webbrowser.open(url))
+            tk.Button(frm, text="OK", width=12, command=top.destroy).pack(pady=(16, 0))
+            top.update_idletasks()
+            w, h = top.winfo_width(), top.winfo_height()
+            x = (top.winfo_screenwidth() - w) // 2
+            y = (top.winfo_screenheight() - h) // 3
+            top.geometry(f"+{x}+{y}")
+            top.grab_set()
+            self.root.wait_window(top)
+        except Exception:
+            self.info(title, f"{message}\n\n{link_text}\n{url}")
+
     def error(self, title, message):
         if self.gui:
             from tkinter import messagebox
@@ -249,6 +280,54 @@ def extract_chase_transactions(pages, filename, statement_date):
 
 
 # ---------------------------------------------------------------------------
+# Make the output workbook nice to look at
+# ---------------------------------------------------------------------------
+def prettify_sheet(ws):
+    """Style an openpyxl worksheet so it's pleasant out of the box: a colored,
+    bold, frozen header row; column widths sized to the content; a filter on the
+    header; and money columns formatted with thousands separators (negatives in
+    red)."""
+    from openpyxl.styles import Font, PatternFill, Alignment
+    from openpyxl.utils import get_column_letter
+
+    header_fill = PatternFill("solid", fgColor="1F4E78")   # dark blue
+    header_font = Font(bold=True, color="FFFFFF", size=11)
+    header_align = Alignment(horizontal="left", vertical="center")
+
+    headers = [c.value for c in ws[1]]
+
+    # Header row: color + bold white text, and a little taller.
+    for cell in ws[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = header_align
+    ws.row_dimensions[1].height = 20
+
+    # Freeze the header row and add filter dropdowns.
+    ws.freeze_panes = "A2"
+    ws.auto_filter.ref = ws.dimensions
+
+    money_cols = {"Amount", "Balance"}
+    money_fmt = '#,##0.00;[Red]-#,##0.00'
+    width_cap = {"Original_Line": 60, "Description": 45}
+
+    for idx, name in enumerate(headers, start=1):
+        letter = get_column_letter(idx)
+        longest = len(str(name))
+        for cell in ws[letter][1:]:
+            if cell.value is not None:
+                longest = max(longest, len(str(cell.value)))
+        cap = width_cap.get(str(name), 22)
+        width = min(max(longest + 2, 10), cap)
+        width = max(width, len(str(name)) + 2)   # never cut off the header text
+        ws.column_dimensions[letter].width = width
+        if name in money_cols:
+            for cell in ws[letter][1:]:
+                cell.number_format = money_fmt
+                cell.alignment = Alignment(horizontal="right")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 def main():
@@ -274,14 +353,18 @@ def main():
         return
 
     if not (sys.argv[1:] and not sys.argv[1].startswith("-")):
-        ui.info(
-            "Chase Statement Processor",
+        ui.welcome(
+            "PDF -> Excel Bank Statement Converter",
             "This tool extracts transactions from Chase PDF statements into Excel.\n\n"
-            "Next: pick the folder that holds your Chase PDF statements.\n"
-            "Every PDF in that folder will be processed.\n\n"
-            "Tip: you can also run it as\n"
-            "    python3 pdf-2-excel.py \"/path/to/your/folder\"\n"
-            "to skip this picker entirely.",
+            "It's built and tested for Chase checking statements — but you can easily "
+            "tweak it for ANY other bank or credit-card statement using AI (about 5 "
+            "minutes, no coding needed). The link below shows you how.\n\n"
+            "Next: pick the folder that holds your PDF statements. Every PDF in that "
+            "folder will be processed.\n\n"
+            "Tip: run  python3 pdf-2-excel.py \"/path/to/folder\"  to skip this picker.",
+            "How to use it with another bank or credit card (opens GitHub)",
+            "https://github.com/cloudpotions/PDF-to-Excel-Bank-Statements-Converter"
+            "#use-it-with-any-bank-or-credit-card-5-minute-ai-tweak",
         )
 
     # Choose the folder
@@ -365,6 +448,8 @@ def main():
             df[['Statement_Date', 'Date', 'Description', 'Amount', 'Original_Line',
                 'Source_File', 'Source_File_Page_Number']].to_excel(
                 writer, sheet_name='Verification', index=False)
+            for ws in writer.sheets.values():
+                prettify_sheet(ws)
 
         # Console report
         print("\n2. VERIFICATION SUMMARY")
