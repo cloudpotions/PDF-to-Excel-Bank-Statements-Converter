@@ -92,14 +92,18 @@ pip3 install pdfplumber pandas openpyxl
 **Step 1 — Install Python, Tk, and the folder picker.** Open a terminal and paste:
 
 ```
-sudo apt install python3 python3-pip python3-tk zenity
+sudo apt install python3 python3-pip python3-tk python3-gi gir1.2-gtk-3.0 zenity
 ```
 
 On Fedora / RHEL, use this instead:
 
 ```
-sudo dnf install python3 python3-pip python3-tkinter zenity
+sudo dnf install python3 python3-pip python3-tkinter python3-gobject gtk3 zenity
 ```
+
+(`python3-gi` + `gir1.2-gtk-3.0` are what give you the modern GTK folder picker —
+they're preinstalled on Ubuntu desktop but worth listing for minimal installs.
+`zenity` and `python3-tk` are fallbacks.)
 
 **Step 2 — Install the libraries.** Paste:
 
@@ -336,7 +340,7 @@ Work through these requirements IN ORDER and don't skip any:
 |---|---|
 | `ModuleNotFoundError: No module named 'pdfplumber'` (or pandas/openpyxl) | You skipped the "install the libraries" step — run it again for your OS. |
 | `No module named 'tkinter'` / no window appears (Linux) | Install Tk: `sudo apt install python3-tk` (Debian/Ubuntu) or `sudo dnf install python3-tkinter` (Fedora). |
-| The Linux folder picker feels clunky | Install `zenity` for the native picker (it's in the Linux step), or run with a folder path on the command line. |
+| The Linux folder picker feels clunky | Install `python3-gi gir1.2-gtk-3.0` for the modern native picker (it's in the Linux step). If those are missing, the script falls back to `zenity`, then Tk. |
 | Running over SSH / no display | Pass the folder path directly: `python3 pdf-2-excel.py "/path/to/folder"` — it runs fully in the terminal, no GUI needed. |
 | `command not found: python3` (Windows) | On Windows use `python` instead of `python3`, and make sure "Add Python to PATH" was checked at install. |
 | No transactions found | Confirm the PDFs are genuine **Chase** statements with a "TRANSACTION DETAIL" section. Other banks need the parser retargeted — see [Use it with ANY bank or credit card](#use-it-with-any-bank-or-credit-card-5-minute-ai-tweak). |

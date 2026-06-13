@@ -11,9 +11,11 @@ Usage:
 Notes:
   * Pass the folder path as an argument to skip the picker entirely - this is the
     fastest, least clunky way, especially on Linux.
-  * On Linux, if `zenity` is installed the script uses the native GNOME/GTK folder
-    picker (much nicer than Tk's built-in one). Install it with:
-        sudo apt install zenity
+  * On Linux, the picker uses PyGObject (Gtk.FileChooserNative), which on a
+    Wayland session routes through xdg-desktop-portal and shows the modern
+    native dialog (sidebar + large icons). Both python3-gi and gir1.2-gtk-3.0
+    are preinstalled on Ubuntu desktop, so there is nothing to install. If
+    PyGObject is missing, the script falls back to `zenity`, then Tk.
   * Works headless (over SSH / no display) as long as you pass the folder path.
 """
 import os
@@ -118,6 +120,13 @@ class UI:
 # ---------------------------------------------------------------------------
 # Folder selection - the part that used to feel clunky on Linux
 # ---------------------------------------------------------------------------
+# Sentinel returned by a picker when that picker is *not installed* on this
+# system, so the caller can try the next one in the chain. Distinct from None,
+# which means "user cancelled" - in that case we DO NOT keep trying other
+# pickers (that's what produced the double-dialog bug).
+_PICKER_UNAVAILABLE = object()
+
+
 def default_start_dir():
     """A sensible place to open the picker so the user is not dumped in '/'."""
     home = os.path.expanduser("~")
@@ -128,11 +137,43 @@ def default_start_dir():
     return home
 
 
+def pick_folder_gtk(start_dir):
+    """Native GTK folder picker via PyGObject. On Wayland this routes through
+    xdg-desktop-portal and produces the modern dialog (sidebar + large icons)."""
+    if platform.system() != "Linux":
+        return _PICKER_UNAVAILABLE
+    try:
+        import gi
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import Gtk
+    except (ImportError, ValueError):
+        return _PICKER_UNAVAILABLE
+
+    dialog = Gtk.FileChooserNative.new(
+        "Select the folder containing your Chase PDF statements",
+        None,
+        Gtk.FileChooserAction.SELECT_FOLDER,
+        "_Open",
+        "_Cancel",
+    )
+    if start_dir and os.path.isdir(start_dir):
+        dialog.set_current_folder(start_dir)
+
+    response = dialog.run()
+    path = dialog.get_filename() if response == Gtk.ResponseType.ACCEPT else None
+    dialog.destroy()
+    # Drain pending events so the dialog actually disappears before we return.
+    while Gtk.events_pending():
+        Gtk.main_iteration()
+    return path
+
+
 def pick_folder_zenity(start_dir):
-    """Use the native GTK folder picker on Linux when zenity is present.
-    Returns a path string, or None if cancelled / unavailable."""
+    """Fallback for Linux systems without PyGObject. Note: zenity 4.0.x on
+    Wayland has been observed to mis-report exit codes, which used to cause us
+    to open a Tk dialog on top of it - hence we now prefer GTK directly above."""
     if platform.system() != "Linux" or not shutil.which("zenity"):
-        return None
+        return _PICKER_UNAVAILABLE
     try:
         result = subprocess.run(
             [
@@ -144,16 +185,16 @@ def pick_folder_zenity(start_dir):
         )
         if result.returncode == 0:
             return result.stdout.strip() or None
+        return None
     except Exception:
         return None
-    return None
 
 
 def pick_folder_tk(ui, start_dir):
-    """Tk's built-in folder chooser (fallback). We at least open it in a useful
-    directory so there is far less navigating to do."""
+    """Tk's built-in folder chooser. Last-resort fallback for Linux and the
+    primary picker on Windows / macOS (where Tk's native dialog is fine)."""
     if not ui.gui:
-        return None
+        return _PICKER_UNAVAILABLE
     from tkinter import filedialog
     path = filedialog.askdirectory(
         title="Select the folder containing your Chase PDF statements",
@@ -164,8 +205,10 @@ def pick_folder_tk(ui, start_dir):
 
 
 def choose_folder(ui):
-    """Resolve the target folder: command-line arg first, then native picker,
-    then Tk picker. Returns an absolute path or None."""
+    """Resolve the target folder: command-line arg first, then native picker.
+    Returns an absolute path or None. Critically, once a picker is found to be
+    available, we use its result as-is - we do not fall through to a second
+    picker just because the user cancelled the first."""
     # 1) Explicit path on the command line - fastest, works headless.
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     if args:
@@ -175,23 +218,30 @@ def choose_folder(ui):
             return None
         return path
 
-    if not ui.gui and platform.system() == "Linux" and not shutil.which("zenity"):
-        ui.error(
-            "No Way to Pick a Folder",
-            "No display was detected and 'zenity' is not installed, so a folder\n"
-            "picker cannot be shown.\n\n"
-            "Just pass the folder path directly, e.g.:\n"
-            "    python3 pdf-2-excel.py \"/home/you/Chase Statements 2024\"",
-        )
-        return None
-
     start_dir = default_start_dir()
-    # 2) Native GTK picker on Linux (nice experience).
-    path = pick_folder_zenity(start_dir)
-    if path:
-        return path
-    # 3) Tk fallback (still opens in a sensible directory).
-    return pick_folder_tk(ui, start_dir)
+
+    if platform.system() == "Linux":
+        picker_chain = (
+            lambda: pick_folder_gtk(start_dir),
+            lambda: pick_folder_zenity(start_dir),
+            lambda: pick_folder_tk(ui, start_dir),
+        )
+    else:
+        # On Windows / macOS, Tk's filedialog is the native dialog.
+        picker_chain = (lambda: pick_folder_tk(ui, start_dir),)
+
+    for picker in picker_chain:
+        result = picker()
+        if result is not _PICKER_UNAVAILABLE:
+            return result
+
+    ui.error(
+        "No Way to Pick a Folder",
+        "No graphical folder picker is available on this system.\n\n"
+        "Just pass the folder path directly, e.g.:\n"
+        "    python3 pdf-2-excel.py \"/home/you/Chase Statements 2024\"",
+    )
+    return None
 
 
 # ---------------------------------------------------------------------------
